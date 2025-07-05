@@ -1,16 +1,35 @@
-// components/favorites-client.tsx
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useFavorites } from '@/lib/useFavorites';
 import { EventCard } from '@/components/EventCard';
 
 export function FavoritesClient() {
 	const { favorites } = useFavorites();
+	const [hasMounted, setHasMounted] = useState(false); // 👈 track mount state
+
+	// 👇 Force re-render when localStorage changes
+	useEffect(() => {
+		setHasMounted(true); // 👈 mark that we're on the client after mount
+
+		const handleStorageChange = () => {
+			window.location.reload();
+		};
+
+		window.addEventListener('storage', handleStorageChange);
+
+		return () => {
+			window.removeEventListener('storage', handleStorageChange);
+		};
+	}, []);
+
+	// 👇 Don't render anything until we know we're mounted
+	if (!hasMounted) return null;
 
 	if (favorites.length === 0) {
 		return (
 			<p className='text-muted-foreground'>
-				You haven't favorited any events yet.
+				{`You haven’t favorited any events yet.`}
 			</p>
 		);
 	}

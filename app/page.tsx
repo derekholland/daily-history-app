@@ -1,35 +1,35 @@
-// import { getTodayEvents } from '@/lib/getTodayEvents';
-// import { HistoryTimeline } from '@/components/HistoryTimeline';
-// import { Navbar } from '@/components/Navbar';
-
-// export default async function HomePage() {
-// 	const events = await getTodayEvents();
-
-// 	return (
-// 		<main className='max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6'>
-// 			<h1 className='text-3xl font-bold flex items-center gap-2'>
-// 				📅 This Day in History
-// 			</h1>
-
-// 			<HistoryTimeline events={events} />
-// 		</main>
-// 	);
-// }
-
 import { getTodayEvents } from '@/lib/getTodayEvents';
+import { getThumbnail } from '@/lib/getThumbnail';
 import { HistoryTimeline } from '@/components/HistoryTimeline';
 
-function formatToday() {
-	const today = new Date();
-	return today.toLocaleDateString('en-US', {
-		month: 'long',
-		day: 'numeric'
-	});
-}
-
 export default async function HomePage() {
+	function formatToday() {
+		const now = new Date();
+		return now.toLocaleDateString(undefined, {
+			month: 'long',
+			day: 'numeric'
+		});
+	}
+
 	const events = await getTodayEvents();
 	const today = formatToday();
+
+	// ✅ Map events with thumbnail images
+	const eventsWithImages = await Promise.all(
+		events.map(async event => {
+			const firstLink = event.links?.[0];
+			let imageUrl = null;
+
+			if (firstLink?.title) {
+				imageUrl = await getThumbnail(firstLink.title);
+			}
+
+			return {
+				...event,
+				imageUrl
+			};
+		})
+	);
 
 	return (
 		<main className='max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6'>
@@ -38,7 +38,12 @@ export default async function HomePage() {
 				<span className='text-muted-foreground text-lg'>{today}</span>
 			</h1>
 
-			<HistoryTimeline events={events} />
+			{/* <div className='space-y-4'>
+				{eventsWithImages.map((event, idx) => (
+					<EventCard key={idx} event={event} imageUrl={event.imageUrl} />
+				))}
+			</div> */}
+			<HistoryTimeline events={eventsWithImages} />
 		</main>
 	);
 }
