@@ -2,6 +2,8 @@ import { getTodayEvents } from '@/lib/getTodayEvents';
 import { getThumbnail } from '@/lib/getThumbnail';
 import { HistoryTimeline } from '@/components/HistoryTimeline';
 
+export const revalidate = 86400; // revalidate once per day
+
 export default async function HomePage() {
 	function formatToday() {
 		const now = new Date();
@@ -38,11 +40,6 @@ export default async function HomePage() {
 				<span className='text-muted-foreground text-lg'>{today}</span>
 			</h1>
 
-			{/* <div className='space-y-4'>
-				{eventsWithImages.map((event, idx) => (
-					<EventCard key={idx} event={event} imageUrl={event.imageUrl} />
-				))}
-			</div> */}
 			<HistoryTimeline events={eventsWithImages} />
 		</main>
 	);
