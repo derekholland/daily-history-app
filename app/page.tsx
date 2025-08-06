@@ -2,6 +2,7 @@ import { getTodayEvents } from '@/lib/getTodayEvents';
 import { getThumbnail } from '@/lib/getThumbnail';
 import { HistoryTimeline } from '@/components/HistoryTimeline';
 // import { RevalidateOnVisit } from '@/components/RevalidateOnVisit';
+export const dynamic = 'force-dynamic';
 import { RevalidateOnDayChange } from '@/components/RevalidateOnDayChange';
 
 <RevalidateOnDayChange />;
