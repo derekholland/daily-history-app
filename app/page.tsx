@@ -46,7 +46,7 @@ export default async function HomePage() {
 		<main className='max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6'>
 			{/* <RevalidateOnVisit /> */}
 			<h1 className='text-3xl font-bold flex flex-col gap-1'>
-				<span>📅 This Day in History</span>
+				<span>📅 Today in History</span>
 				<span className='text-muted-foreground text-lg'>{today}</span>
 			</h1>
 
