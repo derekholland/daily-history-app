@@ -7,6 +7,13 @@ export function useFavorites() {
 
 	useEffect(() => {
 		setFavorites(getFavorites());
+		const sync = () => setFavorites(getFavorites());
+		window.addEventListener('history-favorites-changed', sync);
+		window.addEventListener('storage', sync);
+		return () => {
+			window.removeEventListener('history-favorites-changed', sync);
+			window.removeEventListener('storage', sync);
+		};
 	}, []);
 
 	const isFavorited = (event: HistoricalEvent) =>

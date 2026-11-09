@@ -12,15 +12,6 @@ export function FavoritesClient() {
 	useEffect(() => {
 		setHasMounted(true); // 👈 mark that we're on the client after mount
 
-		const handleStorageChange = () => {
-			window.location.reload();
-		};
-
-		window.addEventListener('storage', handleStorageChange);
-
-		return () => {
-			window.removeEventListener('storage', handleStorageChange);
-		};
 	}, []);
 
 	// 👇 Don't render anything until we know we're mounted

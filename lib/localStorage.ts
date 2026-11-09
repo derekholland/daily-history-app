@@ -5,7 +5,10 @@ const STORAGE_KEY = 'history-favorites';
 export const getFavorites = (): HistoricalEvent[] => {
 	if (typeof window !== 'undefined') {
 		const favorites = localStorage.getItem(STORAGE_KEY);
-		return favorites ? JSON.parse(favorites) : [];
+		try {
+			const parsed = favorites ? JSON.parse(favorites) : [];
+			return Array.isArray(parsed) ? parsed.filter(event => event && typeof event.text === 'string' && typeof event.year === 'string') : [];
+		} catch { return []; }
 	}
 	return [];
 };
@@ -13,6 +16,7 @@ export const getFavorites = (): HistoricalEvent[] => {
 export const setFavorites = (favorites: HistoricalEvent[]) => {
 	if (typeof window !== 'undefined') {
 		localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
+		window.dispatchEvent(new Event('history-favorites-changed'));
 	}
 };
 
